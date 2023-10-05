@@ -34,6 +34,9 @@ export default{
 					// console.log(this.file)
 					console.log('create success',res.data);
 				})
+				.catch((err)=>{
+					console.log(err)
+				})
 		},
 		getFiles(){
 			axios.get('http://127.0.0.1:8000/api/file')
@@ -41,6 +44,9 @@ export default{
 					console.log('get file success',res.data)
 						this.recieved = res.data.results;
 					})
+					.catch((err)=>{
+					console.log(err)
+				})
 		},
 		uploadFile(event){
 			this.file = event.target.files[0];
@@ -55,6 +61,9 @@ export default{
 				.then((res)=>{
 					console.log('update req success',res.data.result);
 					this.showApiFile = res.data.result;
+				})
+				.catch((err)=>{
+					console.log(err)
 				})
 		},
 		editFile(event){
@@ -73,13 +82,23 @@ export default{
         			'Content-Type': 'multipart/form-data'
     					}
   				}
-				).then((res)=>{
+				)
+				.then((res)=>{
 					console.log('new fake pur success',res.data);
-			})
+				})
+				.catch((err)=>{
+					console.log(err)
+				})
 		},
 		deleteFile(id){
 			console.log('file deleted')
 			axios.delete(`http://127.0.0.1:8000/api/file/${id}`)
+				.then((res)=>{
+						console.log('delete success',res.data);
+					})
+				.catch((err)=>{
+					console.log(err)
+				})
 		}
 	}
 }
