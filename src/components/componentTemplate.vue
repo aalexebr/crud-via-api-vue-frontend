@@ -14,9 +14,9 @@ export default{
 		editFormData:{
 			name: '',
 			file: null,
-			remove:null
+			remove:false
 		},
-		updateFile1: null
+		updateFile1: null,
 	  }
     },
     components: {
@@ -31,21 +31,21 @@ export default{
         			'Content-Type': 'multipart/form-data'
     					}
   				}).then((res)=>{
-					console.log(this.file)
-					console.log(res.data);
+					// console.log(this.file)
+					console.log('create success',res.data);
 				})
 		},
 		getFiles(){
 			axios.get('http://127.0.0.1:8000/api/file')
 				.then((res)=>{
-					console.log(res.data)
+					console.log('get file success',res.data)
 						this.recieved = res.data.results;
 					})
 		},
 		uploadFile(event){
 			this.file = event.target.files[0];
 			this.formData.file = event.target.files[0];
-			console.log(event.target)
+			// console.log(event.target)
 			
 		},
 		getUpdateForm(id){
@@ -53,26 +53,33 @@ export default{
 			this.showApiFile = ''
 			axios.get(`http://127.0.0.1:8000/api/file/${id}`)
 				.then((res)=>{
-					console.log(res.data.result);
+					console.log('update req success',res.data.result);
 					this.showApiFile = res.data.result;
 				})
 		},
 		editFile(event){
 			this.editFile1 = event.target.files[0];
 			this.editFormData.file = event.target.files[0];
-			console.log(event.target)
+			// console.log(event.target)
 			
 		},
 		updateFile(){
-			console.log(this.editFormData.remove)
-			axios.post(`http://127.0.0.1:8000/api/file/${id}`,this.editFormData,{
+			// axios.put with a file doesn't work so 
+			console.log(this.editFormData)
+			this.editFormData.name = this.showApiFile.name
+			axios.post(`http://127.0.0.1:8000/api/file/${this.showApiFile.id}`,this.editFormData,
+				{
     			headers: {
         			'Content-Type': 'multipart/form-data'
     					}
-  				}).then((res)=>{
-					console.log(this.file)
-					console.log(res.data);
-				})
+  				}
+				).then((res)=>{
+					console.log('new fake pur success',res.data);
+			})
+		},
+		deleteFile(id){
+			console.log('file deleted')
+			axios.delete(`http://127.0.0.1:8000/api/file/${id}`)
 		}
 	}
 }
@@ -96,7 +103,9 @@ export default{
   <template v-if="recieved != null">
 	<ul>
 		<li v-for="(file, i) in recieved" :key="i">
-			{{ file.name }} <button @click="getUpdateForm(file.id)">update</button>
+			{{ file.name }} 
+			<button @click="getUpdateForm(file.id)">update</button>
+			<button @click="deleteFile(file.id)">delete</button>
 		</li>
 	</ul>
   </template>
